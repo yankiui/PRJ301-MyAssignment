@@ -25,13 +25,13 @@ public class LoginController extends HttpServlet {
         {
             HttpSession session = req.getSession();
             session.setAttribute("auth", u);
-            req.setAttribute("message", "login successful!");
+            req.getRequestDispatcher("view/common/home.jsp").forward(req, resp);
         }
         else
         {
-            req.setAttribute("message", "login failed!");
+            req.getRequestDispatcher("view/auth/login.html").forward(req, resp);
         }
-        req.getRequestDispatcher("view/common/home.jsp").forward(req, resp);
+        
     }
 
     @Override
