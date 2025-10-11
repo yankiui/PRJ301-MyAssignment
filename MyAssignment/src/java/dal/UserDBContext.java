@@ -12,33 +12,31 @@ public class UserDBContext extends DBContext<User> {
 
     public User get(String username, String password) {
         try {
-            String sql = "SELECT [user_id]\n"
-                    + "      ,[username]\n"
-                    + "      ,[displayname]\n"
-                    + "  FROM [User]\n"
-                    + "WHERE\n"
-                    + "username = ? \n"
-                    + "AND \n"
-                    + "[password] = ? ";
+            String sql = "select u.user_id, e.rid, e.ename, r.Role, d.dname\n"
+                    + "from [User] u \n"
+                    + "inner join Employee e on u.[user_id] = e.uid\n"
+                    + "inner join Department d on e.did = d.did\n"
+                    + "inner join Role r on e.rid = r.rid\n"
+                    + "where u.username = ? and u.password = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, username);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
-            if(rs.next())
-            {
+            if (rs.next()) {
                 //return logged account
                 User u = new User();
                 u.setId(rs.getInt("user_id"));
                 u.setUsername(username);
-                u.setDisplayname(rs.getNString("displayname"));
+                u.setDisplayname(rs.getNString("ename"));
+                u.setRid(rs.getInt("rid"));
+                u.setRole(rs.getNString("Role"));
+                u.setRole(rs.getNString("dname"));
                 return u;
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally
-        {
+        } finally {
             closeConnection();
         }
         return null;
@@ -70,4 +68,3 @@ public class UserDBContext extends DBContext<User> {
     }
 
 }
-

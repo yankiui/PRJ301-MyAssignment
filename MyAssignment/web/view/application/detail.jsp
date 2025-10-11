@@ -1,7 +1,7 @@
 <%-- 
-    Document   : message
-    Created on : Oct 6, 2025, 8:03:38 AM
-    Author     : sonnt
+    Document   : detail
+    Created on : Oct 11, 2025, 5:26:46 PM
+    Author     : duong
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <span id="message">${requestScope.message}</span>
+        <h1>Hello World!</h1>
     </body>
 </html>

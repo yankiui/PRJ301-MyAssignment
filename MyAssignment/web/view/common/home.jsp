@@ -13,11 +13,30 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <c:if test="${sessionScope.auth ne null}">
+        <c:if test="${sessionScope.auth ne null}" var = "a">
             Hello ${sessionScope.auth.displayname}!
         </c:if>
         <c:if test="${sessionScope.auth eq null}">
             You are not yet logged in!
-        </c:if>    
+        </c:if>
+        <c:if test="${sessionScope.auth.rid eq 1}">
+            <br/>
+            You are Division leader <br/>
+            You can do these function: <br/>
+            <a href="${pageContext.request.contextPath}/view/application/create.jsp">Watch</a>
+        </c:if>
+        <c:if test="${sessionScope.auth.rid eq 2}">
+            <br/>
+            You are Group leader <br/>
+            You can do these function: <br/>
+            <a href="index.html">Watch</a>
+        </c:if>
+        <c:if test="${sessionScope.auth.rid eq 3}">
+            <br/>
+            You are Division leader <br/>
+            You can do these function: <br/>
+            <a href="index.html">Watch</a>
+        </c:if>
+
     </body>
 </html>
