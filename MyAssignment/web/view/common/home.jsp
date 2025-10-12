@@ -23,7 +23,7 @@
             <br/>
             You are Division leader <br/>
             You can do these function: <br/>
-            <a href="${pageContext.request.contextPath}/view/application/create.jsp">Watch</a>
+            <a href="index.html">Watch</a>
         </c:if>
         <c:if test="${sessionScope.auth.rid eq 2}">
             <br/>
@@ -35,7 +35,7 @@
             <br/>
             You are Division leader <br/>
             You can do these function: <br/>
-            <a href="index.html">Watch</a>
+            <a href="${pageContext.request.contextPath}/view/application/create.jsp">click here to create application!!</a>
         </c:if>
 
     </body>
