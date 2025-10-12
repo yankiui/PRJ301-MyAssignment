@@ -30,7 +30,7 @@ public class UserDBContext extends DBContext<User> {
                 u.setDisplayname(rs.getNString("ename"));
                 u.setRid(rs.getInt("rid"));
                 u.setRole(rs.getNString("Role"));
-                u.setRole(rs.getNString("dname"));
+                u.setDept(rs.getNString("dname"));
                 return u;
             }
 

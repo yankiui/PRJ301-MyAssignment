@@ -53,24 +53,26 @@ public class ApplicationDBContext extends DBContext<Application> {
             //begin transaction
             connection.setAutoCommit(false);
             //insert employee
-            String sql_insert_application = "insert into [Application]\n"
-                    + "([uid],\n"
-                    + "[rid],\n"
-                    + "[did],\n"
-                    + "[Start_date],\n"
-                    + "[End_date],\n"
-                    + "[reason])\n"
+            String sql_insert_application = "insert into Application\n"
+                    + "(displayname,\n"
+                    + "role,\n"
+                    + "dept,\n"
+                    + "Start_date,\n"
+                    + "End_date,\n"
+                    + "reason\n"
+                    + ")\n"
                     + "values\n"
                     + "(?,\n"
                     + "?,\n"
                     + "?,\n"
                     + "?,\n"
                     + "?,\n"
-                    + "?)";
+                    + "?\n"
+                    + ")";
             PreparedStatement stm = connection.prepareStatement(sql_insert_application);
-            stm.setInt(1, model.getUid());
-            stm.setInt(2, model.getRid());
-            stm.setInt(3, model.getDid());
+            stm.setString(1, model.getUser());
+            stm.setString(2, model.getRole());
+            stm.setString(3, model.getDept());
             stm.setDate(4, model.getStart_date());
             stm.setDate(5, model.getEnd_date());
             stm.setString(6, model.getReason());

@@ -88,8 +88,7 @@
                 <h2>Đơn xin nghỉ phép</h2> <br/><!-- comment -->
                 User: ${sessionScope.auth.displayname} , 
                 Role: ${sessionScope.auth.role} ,
-                Dep: phòng 
-                ${sessionScope.auth.dept} <br/><!-- comment -->
+                Dep: phòng ${sessionScope.auth.dept} <br/><!-- comment -->
                 Từ ngày: <input type="date" name="datStart" id="datStart" required/><br/><!-- comment -->
                 Tới ngày: <input type="date" name="datEnd" id="datEnd" required/><br/>
                 Lý do: <br/>

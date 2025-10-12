@@ -9,33 +9,6 @@ public class Application extends BaseModel{
     private Date Start_date;
     private Date End_date;
     private String reason;
-    private int uid;
-    private int rid;
-    private int did;
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public int getRid() {
-        return rid;
-    }
-
-    public void setRid(int rid) {
-        this.rid = rid;
-    }
-
-    public int getDid() {
-        return did;
-    }
-
-    public void setDid(int did) {
-        this.did = did;
-    }
 
     public String getUser() {
         return user;
