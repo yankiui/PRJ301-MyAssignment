@@ -32,8 +32,6 @@ public class CreateController extends BaseRequiredAuthenticationController {
             // Bước 3: Ép kiểu đối tượng đó về đúng kiểu User ban đầu.
             User loggedInUser = (User) authObject;
             
-            // Bây giờ bạn có thể sử dụng đối tượng loggedInUser một cách bình thường
-            
             a.setUser(loggedInUser.getDisplayname());
             a.setRole(loggedInUser.getRole());
             a.setDept(loggedInUser.getDept());
@@ -47,20 +45,6 @@ public class CreateController extends BaseRequiredAuthenticationController {
             req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
             
         }
-//        a.setCreated_by(user);
-//        Department d = new Department();
-//        d.setId(Integer.parseInt(req.getParameter("did")));
-//        e.setDept(d);
-//
-//        e.setName(req.getParameter("name"));
-//        e.setGender(req.getParameter("gender").equals("male"));
-//        e.setDob(Date.valueOf(req.getParameter("dob")));
-//
-//        EmployeeDBContext db = new EmployeeDBContext();
-//        db.insert(e);
-//
-//        req.setAttribute("employee", e);
-//        req.getRequestDispatcher("../view/employee/detail.jsp").forward(req, resp);
     }
 
     @Override

@@ -33,7 +33,7 @@
         </c:if>
         <c:if test="${sessionScope.auth.rid eq 3}">
             <br/>
-            You are Division leader <br/>
+            You are Employee <br/>
             You can do these function: <br/>
             <a href="${pageContext.request.contextPath}/view/application/create.jsp">click here to create application!!</a>
         </c:if>
