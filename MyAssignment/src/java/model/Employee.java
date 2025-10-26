@@ -4,12 +4,8 @@ import java.sql.Date;
 
 public class Employee extends BaseModel{
     private String ename;
-    private boolean gender;
-    private Date dob;
-    private int rid;
-    private int did;
-    private int manage_by;
-    private int uid;
+    private Department dept;
+    private Employee manage_by;
 
     public String getEname() {
         return ename;
@@ -19,53 +15,26 @@ public class Employee extends BaseModel{
         this.ename = ename;
     }
 
-    public boolean isGender() {
-        return gender;
+    public Department getDept() {
+        return dept;
     }
 
-    public void setGender(boolean gender) {
-        this.gender = gender;
+    public void setDept(Department dept) {
+        this.dept = dept;
     }
 
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
-    public int getRid() {
-        return rid;
-    }
-
-    public void setRid(int rid) {
-        this.rid = rid;
-    }
-
-    public int getDid() {
-        return did;
-    }
-
-    public void setDid(int did) {
-        this.did = did;
-    }
-
-    public int getManage_by() {
+    public Employee getManage_by() {
         return manage_by;
     }
 
-    public void setManage_by(int manage_by) {
+    public void setManage_by(Employee manage_by) {
         this.manage_by = manage_by;
     }
 
-    public int getUid() {
-        return uid;
-    }
+    
 
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
+   
+    
     
     
     

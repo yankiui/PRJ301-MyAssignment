@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.User;
+import model.auth.User;
 
 public class UserDBContext extends DBContext<User> {
 

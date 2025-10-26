@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import model.User;
+import model.auth.User;
 
 @WebServlet(urlPatterns = "/login")
 public class LoginController extends HttpServlet {

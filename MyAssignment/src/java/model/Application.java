@@ -1,22 +1,34 @@
 package model;
 
+import model.auth.User;
 import java.sql.Date;
 
 public class Application extends BaseModel{
-    private String user;
+    private User user;
     private String role;
     private String dept;
+    private java.util.Date created_time;
     private Date Start_date;
     private Date End_date;
     private String reason;
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
+
+    public java.util.Date getCreated_time() {
+        return created_time;
+    }
+
+    public void setCreated_time(java.util.Date created_time) {
+        this.created_time = created_time;
+    }
+
+    
 
     public String getRole() {
         return role;

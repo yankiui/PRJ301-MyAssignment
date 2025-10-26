@@ -1,4 +1,6 @@
-package model;
+package model.auth;
+
+import model.BaseModel;
 
 public class Role extends BaseModel{
     private String role;

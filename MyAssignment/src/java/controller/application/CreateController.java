@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import model.Application;
 import model.Department;
 import model.Employee;
-import model.User;
+import model.auth.User;
 
 @WebServlet(urlPatterns = "/request/create")
 public class CreateController extends BaseRequiredAuthenticationController {
