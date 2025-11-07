@@ -6,37 +6,48 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Employee;
 import model.auth.User;
 
 public class UserDBContext extends DBContext<User> {
 
     public User get(String username, String password) {
         try {
-            String sql = "select u.user_id, e.rid, e.ename, r.Role, d.dname\n"
-                    + "from [User] u \n"
-                    + "inner join Employee e on u.[user_id] = e.uid\n"
-                    + "inner join Department d on e.did = d.did\n"
-                    + "inner join Role r on e.rid = r.rid\n"
-                    + "where u.username = ? and u.password = ?";
+            String sql = """
+                                     SELECT
+                                     u.uid,
+                                     u.username,
+                                     u.displayname,
+                                     e.eid,
+                                     e.ename
+                                     FROM [User] u INNER JOIN [Enrollment] en ON u.[uid] = en.[uid]
+                                     \t\t\t\t\tINNER JOIN [Employee] e ON e.eid = en.eid
+                                     \t\t\t\t\tWHERE
+                                     \t\t\t\t\tu.username = ? AND u.[password] = ?
+                                     \t\t\t\t\tAND en.active = 1""";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, username);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
-            if (rs.next()) {
-                //return logged account
+            while(rs.next())
+            {
                 User u = new User();
-                u.setId(rs.getInt("user_id"));
+                Employee e = new Employee();
+                e.setId(rs.getInt("eid"));
+                e.setEname(rs.getString("ename"));
+                u.setEmployee(e);
+                
                 u.setUsername(username);
-                u.setDisplayname(rs.getNString("ename"));
-                u.setRid(rs.getInt("rid"));
-                u.setRole(rs.getNString("Role"));
-                u.setDept(rs.getNString("dname"));
+                u.setId(rs.getInt("uid"));
+                u.setDisplayname(rs.getString("displayname"));
+                
                 return u;
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
+        }
+        finally
+        {
             closeConnection();
         }
         return null;

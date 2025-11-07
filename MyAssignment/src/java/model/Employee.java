@@ -30,12 +30,5 @@ public class Employee extends BaseModel{
     public void setManage_by(Employee manage_by) {
         this.manage_by = manage_by;
     }
-
-    
-
-   
-    
-    
-    
     
 }

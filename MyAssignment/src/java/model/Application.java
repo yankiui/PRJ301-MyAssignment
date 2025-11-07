@@ -4,20 +4,20 @@ import model.auth.User;
 import java.sql.Date;
 
 public class Application extends BaseModel{
-    private User user;
-    private String role;
-    private String dept;
+    private Employee created_by;
     private java.util.Date created_time;
-    private Date Start_date;
-    private Date End_date;
+    private java.sql.Date from;
+    private java.sql.Date to;
     private String reason;
-
-    public User getUser() {
-        return user;
+    private int status;
+    private Employee processed_by;
+    
+    public Employee getCreated_by() {
+        return created_by;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCreated_by(Employee created_by) {
+        this.created_by = created_by;
     }
 
     public java.util.Date getCreated_time() {
@@ -28,38 +28,20 @@ public class Application extends BaseModel{
         this.created_time = created_time;
     }
 
-    
-
-    public String getRole() {
-        return role;
+    public java.sql.Date getFrom() {
+        return from;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setFrom(java.sql.Date from) {
+        this.from = from;
     }
 
-    public String getDept() {
-        return dept;
+    public java.sql.Date getTo() {
+        return to;
     }
 
-    public void setDept(String dept) {
-        this.dept = dept;
-    }
-
-    public Date getStart_date() {
-        return Start_date;
-    }
-
-    public void setStart_date(Date Start_date) {
-        this.Start_date = Start_date;
-    }
-
-    public Date getEnd_date() {
-        return End_date;
-    }
-
-    public void setEnd_date(Date End_date) {
-        this.End_date = End_date;
+    public void setTo(java.sql.Date to) {
+        this.to = to;
     }
 
     public String getReason() {
@@ -69,6 +51,23 @@ public class Application extends BaseModel{
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Employee getProcessed_by() {
+        return processed_by;
+    }
+
+    public void setProcessed_by(Employee processed_by) {
+        this.processed_by = processed_by;
+    }
+    
     
     
 }
