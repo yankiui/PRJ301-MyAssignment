@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Employee;
+import model.auth.Role;
 import model.auth.User;
 
 public class UserDBContext extends DBContext<User> {
@@ -29,28 +30,57 @@ public class UserDBContext extends DBContext<User> {
             stm.setString(1, username);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 User u = new User();
                 Employee e = new Employee();
                 e.setId(rs.getInt("eid"));
                 e.setEname(rs.getString("ename"));
                 u.setEmployee(e);
-                
+
                 u.setUsername(username);
                 u.setId(rs.getInt("uid"));
                 u.setDisplayname(rs.getString("displayname"));
-                
+
+//                RoleDBContext roleDB = new RoleDBContext();
+//                ArrayList<Role> roles = roleDB.getByUserId(u.getId());
+//                u.setRoles(roles);
+                ArrayList<Role> roles = getRolesByUserID(u.getId()); // Gọi hàm nội bộ
+                u.setRoles(roles);
                 return u;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally
-        {
+        } finally {
             closeConnection();
         }
         return null;
+    }
+
+    private ArrayList<Role> getRolesByUserID(int uid) {
+        ArrayList<Role> roles = new ArrayList<>();
+        // QUAN TRỌNG: Câu SQL này phải được chạy trên connection
+        // (connection) CÓ SẴN của UserDBContext
+        String sql = """
+                 SELECT r.rid, r.rname 
+                 FROM [Role] r 
+                 INNER JOIN [UserRole] ur ON r.rid = ur.rid
+                 WHERE ur.uid = ?""";
+        try {
+            // Dùng 'connection' có sẵn, không tạo mới
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, uid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Role r = new Role();
+                r.setId(rs.getInt("rid"));
+                // Giả sử model Role của bạn có setRname
+                // r.setRname(rs.getString("rname")); 
+                roles.add(r);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return roles;
     }
 
     @Override

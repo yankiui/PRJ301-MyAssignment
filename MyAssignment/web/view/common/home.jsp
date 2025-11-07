@@ -19,19 +19,19 @@
         <c:if test="${sessionScope.auth eq null}">
             You are not yet logged in!
         </c:if>
-        <c:if test="${sessionScope.auth.rid eq 1}">
+        <c:if test="${sessionScope.auth.roles[0].id eq 1}">
             <br/>
             You are Division leader <br/>
             You can do these function: <br/>
             <a href="index.html">Watch</a>
         </c:if>
-        <c:if test="${sessionScope.auth.rid eq 2}">
+        <c:if test="${sessionScope.auth.roles[0].id eq 2}">
             <br/>
             You are Group leader <br/>
             You can do these function: <br/>
             <a href="index.html">Watch</a>
         </c:if>
-        <c:if test="${sessionScope.auth.rid eq 3}">
+        <c:if test="${sessionScope.auth.roles[0].id eq 3}">
             <br/>
             You are Employee <br/>
             You can do these function: <br/>

@@ -1,31 +1,16 @@
 package model.auth;
 
+import java.util.ArrayList;
 import model.BaseModel;
+import model.Employee;
 
 public class User extends BaseModel {
 
     private String username;
     private String password;
     private String displayname;
-    private int rid;
-    private String role;
-    private String dept;
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getDept() {
-        return dept;
-    }
-
-    public void setDept(String dept) {
-        this.dept = dept;
-    }
+    private Employee employee;
+    private ArrayList<Role> roles = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -51,12 +36,20 @@ public class User extends BaseModel {
         this.displayname = displayname;
     }
 
-    public int getRid() {
-        return rid;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setRid(int rid) {
-        this.rid = rid;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
+    public ArrayList<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<Role> roles) {
+        this.roles = roles;
+    }
+    
 }
