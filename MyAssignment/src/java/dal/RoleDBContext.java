@@ -23,7 +23,8 @@ public class RoleDBContext extends DBContext<Role>{
                                      \t\t\t\t\t\tINNER JOIN [Role] r ON r.rid = ur.rid
                                      \t\t\t\t\t\tINNER JOIN [RoleFeature] rf ON rf.rid = r.rid
                                      \t\t\t\t\t\tINNER JOIN [Feature] f ON f.fid = rf.fid
-                                     \t\t\t\t\t\tWHERE u.uid = ?""";
+                                     \t\t\t\t\t\tWHERE u.uid = ?
+                                    ORDER BY r.rid""";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
@@ -37,7 +38,7 @@ public class RoleDBContext extends DBContext<Role>{
                 if(rid != current.getId())
                 {
                     current = new Role();
-                    current.setId(id);
+                    current.setId(rid);
                     current.setRole(rs.getString("rname"));
                     roles.add(current);
                 }
