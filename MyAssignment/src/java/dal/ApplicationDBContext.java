@@ -1,5 +1,6 @@
 package dal;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -88,7 +89,62 @@ public class ApplicationDBContext extends DBContext<Application>{
 
     @Override
     public void insert(Application model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            //begin transaction
+            connection.setAutoCommit(false);
+            //insert employee
+            String sql_insert_application = """
+                                            insert into [RequestForLeave]
+                                                    (
+                                                    created_by,
+                                                    created_time,
+                                                    [from],
+                                                    [to],
+                                                    [reason],
+                                                    status,
+                                                    processed_by)
+                                                    values
+                                                    (
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    0,
+                                                    null)""";
+            PreparedStatement stm = connection.prepareStatement(sql_insert_application);
+            stm.setInt(1, model.getCreated_by().getId());
+            stm.setTimestamp(2, new java.sql.Timestamp(model.getCreated_time().getTime()));
+            stm.setDate(3, model.getFrom());
+            stm.setDate(4, model.getTo());
+            stm.setString(5, model.getReason());
+            stm.executeUpdate();
+            //get eid
+
+            String sql_select_aid = "SELECT @@IDENTITY as aid";
+            PreparedStatement stm_select_aid = connection.prepareStatement(sql_select_aid);
+            ResultSet rs = stm_select_aid.executeQuery();
+            if (rs.next()) {
+                model.setId(rs.getInt("aid"));
+            }
+            //commit transaction
+            connection.commit();
+        } catch (SQLException ex) {
+            try {
+                //rollback transaction
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            closeConnection();
+        }
     }
 
     @Override

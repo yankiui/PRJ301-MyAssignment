@@ -1,22 +1,67 @@
 package controller.application;
 
-import controller.BaseRequiredAuthorizationController;
+import controller.BaseRequiredAuthenticationController;
+import dal.ApplicationDBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import model.Application;
+import model.Employee;
 import model.auth.User;
 
+
 @WebServlet(urlPatterns = "/request/create")
-public class CreateController extends BaseRequiredAuthorizationController {
+public class CreateController extends BaseRequiredAuthenticationController {
 
     @Override
-    protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+        Application a = new Application();
+        HttpSession session = req.getSession(false);
+        if (session != null && session.getAttribute("auth") != null) {
+            
+            // Bước 2: Lấy attribute có tên là "auth" từ session.
+            // session.getAttribute() luôn trả về một đối tượng kiểu Object.
+//            Object authObject = session.getAttribute("auth");
+//            
+//            // Bước 3: Ép kiểu đối tượng đó về đúng kiểu User ban đầu.
+//            User loggedInUser = (User) authObject;
+
+            a.setCreated_by(user.getEmployee());
+            a.setCreated_time(new Date());
+            a.setFrom(java.sql.Date.valueOf(req.getParameter("datStart")));
+            a.setTo(java.sql.Date.valueOf(req.getParameter("datEnd")));
+            a.setReason(req.getParameter("reason"));
+            ApplicationDBContext ad = new ApplicationDBContext();
+            ad.insert(a);
+            req.setAttribute("application", a);
+            req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
+            
+//            a.setUser(loggedInUser.getDisplayname());
+//            a.setRole(loggedInUser.getRole());
+//            a.setDept(loggedInUser.getDept());
+//            a.setStart_date(Date.valueOf(req.getParameter("datStart")));
+//            a.setEnd_date(Date.valueOf(req.getParameter("datEnd")));
+//            a.setReason(req.getParameter("reason"));
+//            ApplicationDBContext ad = new ApplicationDBContext();
+//            ad.insert(a);
+            
+            req.setAttribute("application", a);
+            req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
+            
+        }
     }
 
     @Override
-    protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+        ApplicationDBContext ad = new ApplicationDBContext();
+        ArrayList<Application> appli = ad.getByEmployeeAndSubodiaries(user.getId());
+        req.setAttribute("appli", appli);
+        req.getRequestDispatcher("../view/application/create.jsp").forward(req, resp);
     }
     
 }

@@ -58,8 +58,6 @@ public class UserDBContext extends DBContext<User> {
 
     private ArrayList<Role> getRolesByUserID(int uid) {
         ArrayList<Role> roles = new ArrayList<>();
-        // QUAN TRỌNG: Câu SQL này phải được chạy trên connection
-        // (connection) CÓ SẴN của UserDBContext
         String sql = """
                  SELECT r.rid, r.rname 
                  FROM [Role] r 

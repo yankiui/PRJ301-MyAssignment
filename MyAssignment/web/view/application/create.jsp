@@ -87,8 +87,8 @@
             <div id="panel" class="panel">
                 <h2>Đơn xin nghỉ phép</h2> <br/><!-- comment -->
                 User: ${sessionScope.auth.displayname} , 
-                Role: ${sessionScope.auth.role} ,
-                Dep: phòng ${sessionScope.auth.dept} <br/><!-- comment -->
+                Role: ${sessionScope.auth.roles[0].role} ,
+                Dep: phòng ${sessionScope.auth.employee.dept.dname} <br/><!-- comment -->
                 Từ ngày: <input type="date" name="datStart" id="datStart" required/><br/><!-- comment -->
                 Tới ngày: <input type="date" name="datEnd" id="datEnd" required/><br/>
                 Lý do: <br/>
