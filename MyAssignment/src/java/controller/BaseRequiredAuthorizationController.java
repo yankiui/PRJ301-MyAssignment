@@ -20,7 +20,7 @@ public abstract class BaseRequiredAuthorizationController extends BaseRequiredAu
         user.setRoles(db.getByUserId(user.getId()));
         // Ghi chú: Bạn không cần update session ở đây,
         // chỉ cần đối tượng 'user' trong bộ nhớ có đủ quyền
-        // req.getSession().setAttribute("auth", user); // (Không bắt buộc)
+         req.getSession().setAttribute("auth", user);
 
         String url = req.getServletPath();
         for (Role role : user.getRoles()) {

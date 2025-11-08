@@ -45,6 +45,8 @@ public class ApplicationDBContext extends DBContext<Application>{
             {
                 Application rfl = new Application();
                 
+                rfl.setId(rs.getInt("rid"));
+                
                 rfl.setCreated_time(rs.getTimestamp("created_time"));
                 rfl.setFrom(rs.getDate("from"));
                 rfl.setTo(rs.getDate("to"));
@@ -149,8 +151,29 @@ public class ApplicationDBContext extends DBContext<Application>{
 
     @Override
     public void update(Application model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            String sql = """
+                                     update [RequestForLeave]
+                                     Set status = ?,
+                                     	processed_by = ?
+                                     where rid = ?""";
+            
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, model.getStatus());
+            stm.setInt(2, model.getProcessed_by().getId());
+            stm.setInt(3, model.getId());
+            stm.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            closeConnection();
+        }
+                 
     }
+    
+
 
     @Override
     public void delete(Application model) {

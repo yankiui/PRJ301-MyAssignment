@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Danh sách đơn</title>
+        <title>Application</title>
     </head>
     <body>
-        
+
         <table border="1px">
             <tr>
                 <td>request id</td>
@@ -20,16 +20,14 @@
                 <td>reason</td>
                 <td>from</td>
                 <td>to</td>
-                
-                <%-- 1. Cột "status" - LUÔN LUÔN HIỂN THỊ --%>
                 <td>status</td>
-                
+
                 <%-- 2. Chỉ hiển thị tiêu đề "processed by" nếu là Manager/Leader --%>
                 <c:if test="${sessionScope.auth.roles[0].id < 3}">
                     <td>processed by</td>
                 </c:if>
             </tr>
-            
+
             <c:forEach items="${requestScope.rfls}" var="r">
                 <tr>
                     <td>${r.id}</td>
@@ -38,27 +36,21 @@
                     <td>${r.from}</td>
                     <td>${r.to}</td>
 
-                    <%-- 1. Cột "status" - LUÔN LUÔN HIỂN THỊ --%>
-                    <td>
-                        <%-- 
-                          Nếu người xem là Employee (role 3), chỉ hiển thị trạng thái
-                          mà không hiển thị "processing" 
-                        --%>
+                    <td> <%-- Cột "Status" --%>
                         <c:if test="${sessionScope.auth.roles[0].id eq 3}">
-                            ${r.status eq 0?"(chờ xử lý)":
+                            ${r.status eq 0?"(processing)":
                               r.status eq 1?"approved":"rejected"
                             }
                         </c:if>
-                        
-                        <%-- Nếu là Manager (role < 3), hiển thị đầy đủ --%>
                         <c:if test="${sessionScope.auth.roles[0].id < 3}">
                             ${r.status eq 0?"processing":
                               r.status eq 1?"approved":"rejected"
                             }
                         </c:if>
                     </td>
-                    
-                    <%-- 2. Chỉ hiển thị cột "processed by" nếu là Manager/Leader --%>
+
+
+                    <%-- Đây là cột "Processed by" (Hành động) --%>
                     <c:if test="${sessionScope.auth.roles[0].id < 3}">
                         <td>
                             <%-- A: Manager xem đơn của cấp dưới --%>
@@ -68,7 +60,7 @@
                                     <a href="review?id=${r.id}&status=2">Reject</a>
                                 </c:if>
                                 <c:if test="${r.processed_by ne null}">
-                                    ${r.processed_by.ename}, bạn có thể đổi thành
+                                    ${r.processed_by.ename}, You can change to
                                     <c:if test="${r.status eq 1}">
                                         <a href="review?id=${r.id}&status=2">Rejected</a>
                                     </c:if>
@@ -88,8 +80,8 @@
                                 </c:if>
                             </c:if>
                         </td>
-                    </c:if> <%-- Kết thúc khối ẩn "processed by" --%>
-                    
+                    </c:if> 
+
                 </tr>
             </c:forEach>
         </table>
