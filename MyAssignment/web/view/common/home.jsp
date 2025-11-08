@@ -11,32 +11,33 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css">
     </head>
     <body>
-        <c:if test="${sessionScope.auth ne null}" var = "a">
-            Hello ${sessionScope.auth.displayname}!
-        </c:if>
-        <c:if test="${sessionScope.auth eq null}">
-            You are not yet logged in!
-        </c:if>
-        <c:if test="${sessionScope.auth.roles[0].id eq 1}">
-            <br/>
-            You are Division leader <br/>
-            You can do these function: <br/>
-            <a href="index.html">Watch</a>
-        </c:if>
-        <c:if test="${sessionScope.auth.roles[0].id eq 2}">
-            <br/>
-            You are Group leader <br/>
-            You can do these function: <br/>
-            <a href="index.html">Watch</a>
-        </c:if>
-        <c:if test="${sessionScope.auth.roles[0].id eq 3}">
-            <br/>
-            You are Employee <br/>
-            You can do these function: <br/>
-            <a href="${pageContext.request.contextPath}/view/application/create.jsp">click here to create application!!</a>
-        </c:if>
+        <jsp:include page="greeting.jsp"></jsp:include>
+        
+        <nav class="function-menu">
+            <h2>Chức năng</h2>
+            
+            
+            <a href="${pageContext.request.contextPath}/view/common/home.jsp">Trang chủ</a>
 
+            <c:if test="${sessionScope.auth.roles[0].id >= 1}">
+                <a href="${pageContext.request.contextPath}/request/list" target="contentFrame">
+                    Xem danh sách đơn
+                </a>
+            </c:if>
+            
+            <c:if test="${sessionScope.auth.roles[0].id eq 2 or sessionScope.auth.roles[0].id eq 3}">
+                <a href="${pageContext.request.contextPath}/request/create" target="contentFrame">
+                    Tạo đơn mới
+                </a>
+            </c:if>
+
+        </nav>
+        <div class="content-container">
+            <iframe name="contentFrame" class="content-frame">
+            </iframe>
+        </div>
     </body>
 </html>

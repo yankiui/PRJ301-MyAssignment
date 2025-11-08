@@ -24,12 +24,12 @@ public class LoginController extends HttpServlet {
         if (u != null) {
             HttpSession session = req.getSession();
             session.setAttribute("auth", u);
-            resp.sendRedirect("request/list");
+            resp.sendRedirect("home");
         } else {
             req.setAttribute("errorMessage", "Sai tên đăng nhập hoặc mật khẩu!");
 
             // Forward (Chuyển tiếp) về trang login.jsp
-            req.getRequestDispatcher("view/auth/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("view/common/home.jsp").forward(req, resp);
         }
 
     }

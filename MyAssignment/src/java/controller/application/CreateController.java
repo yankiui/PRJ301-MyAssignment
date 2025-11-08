@@ -31,9 +31,7 @@ public class CreateController extends BaseRequiredAuthenticationController {
             ApplicationDBContext ad = new ApplicationDBContext();
             ad.insert(a);
             req.setAttribute("application", a);
-            req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
-            req.setAttribute("application", a);
-            req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
+            req.getRequestDispatcher("../view/application/list.jsp").forward(req, resp);
             
         }
     }

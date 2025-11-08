@@ -4,6 +4,7 @@
     Author     : duong
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,14 +15,15 @@
     </head>
     <body>
         <jsp:include page="../common/greeting.jsp"></jsp:include>
-        <table border="1px">
-            <tr>
-                <th>request id</th>
-                <th>created by</th>
-                <th>reason</th>
-                <th>from</th>
-                <th>to</th>
-                <th>status</th>
+            <table border="1px">
+                <tr>
+                    <th>request id</th>
+                    <th>created by</th>
+                    <th>created time</th>
+                    <th>reason</th>
+                    <th>from</th>
+                    <th>to</th>
+                    <th>status</th>
                     <c:if test="${sessionScope.auth.roles[0].id < 3}">
                     <th>processed by</th>
                     </c:if>
@@ -31,6 +33,10 @@
                 <tr>
                     <td>${r.id}</td>
                     <td>${r.created_by.ename}</td>
+                    <td>
+                        <fmt:formatDate value="${r.created_time}" 
+                                        pattern="dd-MM-yyyy 'lúc' hh:mm a" />
+                    </td>
                     <td>${r.reason}</td>
                     <td>${r.from}</td>
                     <td>${r.to}</td>
