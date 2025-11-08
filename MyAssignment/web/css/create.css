@@ -206,3 +206,46 @@ a[href*="status=2"] {
 a[href*="status=2"]:hover {
     color: #ff6666;
 }
+
+.greeting-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto; 
+    padding: 20px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1em;
+    color: #e0e0e0;
+    box-sizing: border-box;
+}
+.greeting-container strong {
+    color: #F0B90B; /* Màu Gold */
+    font-weight: bold;
+}
+
+.logout-button {
+    /* 1. Định vị */
+    position: absolute; /* Đặt ở góc */
+    top: 25px;
+    right: 25px;
+    
+    /* 2. Kích thước "vừa phải" */
+    padding: 10px 18px;
+    
+    /* 3. Màu sắc (Dùng màu Hồng/Đỏ
+       giống nút "Reject" cho dễ nhận diện) */
+    background-color: #f06292;
+    color: #121212; /* Chữ tối để nổi bật trên nền hồng */
+    
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+    background-color: #f48fb1; /* Sáng hơn khi di chuột */
+    box-shadow: 0 0 10px rgba(240, 98, 146, 0.3); /* Hiệu ứng tỏa sáng */
+}

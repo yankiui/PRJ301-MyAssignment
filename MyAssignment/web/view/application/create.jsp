@@ -13,8 +13,11 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/create.css">
     </head>
     <body>
+        <a href="${pageContext.request.contextPath}/request/logout" class="logout-button">
+            Đăng xuất
+        </a>
+        <jsp:include page="../common/home.jsp"></jsp:include>
         <div class="form-container">
-            <jsp:include page="../common/greeting.jsp"></jsp:include>
             <form action="${pageContext.request.contextPath}/request/create" method="post">
                 <div id="panel" class="panel">
                     <h2>Đơn xin nghỉ phép</h2> <br/><!-- comment -->

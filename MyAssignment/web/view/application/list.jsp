@@ -14,7 +14,10 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/list.css">
     </head>
     <body>
-        <jsp:include page="../common/greeting.jsp"></jsp:include>
+        <a href="${pageContext.request.contextPath}/request/logout" class="logout-button">
+            Đăng xuất
+        </a>
+        <jsp:include page="../common/home.jsp"></jsp:include>
             <table border="1px">
                 <tr>
                     <th>request id</th>

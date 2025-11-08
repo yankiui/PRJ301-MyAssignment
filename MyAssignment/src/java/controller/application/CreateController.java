@@ -20,21 +20,21 @@ public class CreateController extends BaseRequiredAuthenticationController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        Application a = new Application();
-        HttpSession session = req.getSession(false);
-        if (session != null && session.getAttribute("auth") != null) {
-            a.setCreated_by(user.getEmployee());
-            a.setCreated_time(new Date());
-            a.setFrom(java.sql.Date.valueOf(req.getParameter("datStart")));
-            a.setTo(java.sql.Date.valueOf(req.getParameter("datEnd")));
-            a.setReason(req.getParameter("reason"));
-            ApplicationDBContext ad = new ApplicationDBContext();
-            ad.insert(a);
-            req.setAttribute("application", a);
-            req.getRequestDispatcher("../view/application/list.jsp").forward(req, resp);
-            
-        }
-    }
+    
+    Application a = new Application();
+    
+    a.setCreated_by(user.getEmployee()); 
+    a.setCreated_time(new Date()); // Lấy ngày giờ hiện tại
+    
+    a.setFrom(java.sql.Date.valueOf(req.getParameter("datStart")));
+    a.setTo(java.sql.Date.valueOf(req.getParameter("datEnd")));
+    a.setReason(req.getParameter("reason"));
+    
+    ApplicationDBContext ad = new ApplicationDBContext();
+    ad.insert(a);
+    
+    resp.sendRedirect(req.getContextPath() + "/view/common/home.jsp");
+}
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
