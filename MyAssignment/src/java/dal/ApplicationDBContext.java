@@ -10,9 +10,102 @@ import java.util.logging.Logger;
 import model.Application;
 import model.Employee;
 
-public class ApplicationDBContext extends DBContext<Application>{
-    
-    
+public class ApplicationDBContext extends DBContext<Application> {
+
+    public ArrayList<Application> list(int pageindex, int pagesize) {
+
+        ArrayList<Application> apps = new ArrayList<>();
+
+        try {
+            String sql = """
+                     SELECT 
+                         r.rid, r.created_time, r.[from], r.[to], r.reason, r.status,
+                         
+                         c.eid AS created_id, 
+                         c.ename AS created_name,
+                         
+                         p.eid AS processed_id, 
+                         p.ename AS processed_name
+                         
+                     FROM RequestForLeave r
+                     INNER JOIN Employee c ON r.created_by = c.eid
+                     LEFT JOIN Employee p ON r.processed_by = p.eid
+                     
+                     ORDER BY r.rid ASC
+                     OFFSET (? - 1) * ? ROWS
+                     FETCH NEXT ? ROWS ONLY;
+                     """;
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, pageindex);
+            stm.setInt(2, pagesize);
+            stm.setInt(3, pagesize);
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                Application app = new Application();
+
+                app.setId(rs.getInt("rid"));
+                app.setCreated_time(rs.getTimestamp("created_time"));
+                app.setFrom(rs.getDate("from"));
+                app.setTo(rs.getDate("to"));
+                app.setReason(rs.getString("reason"));
+                app.setStatus(rs.getInt("status"));
+
+                Employee createdBy = new Employee();
+                createdBy.setId(rs.getInt("created_id"));
+                createdBy.setEname(rs.getString("created_name"));
+                app.setCreated_by(createdBy);
+
+                int processedById = rs.getInt("processed_id");
+                if (!rs.wasNull()) { // Nếu processed_by không NULL
+                    Employee processedBy = new Employee();
+                    processedBy.setId(processedById);
+                    processedBy.setEname(rs.getString("processed_name"));
+                    app.setProcessed_by(processedBy);
+                }
+
+                apps.add(app);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    closeConnection();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return apps;
+    }
+
+    public int count() {
+        try {
+            String sql = "SELECT COUNT(*) as total FROM RequestForLeave";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    closeConnection();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return 0;
+    }
+
     public ArrayList<Application> getByEmployeeAndSubodiaries(int eid) {
         ArrayList<Application> rfls = new ArrayList<>();
         try {
@@ -41,39 +134,35 @@ public class ApplicationDBContext extends DBContext<Application>{
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, eid);
             ResultSet rs = stm.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 Application rfl = new Application();
-                
+
                 rfl.setId(rs.getInt("rid"));
-                
+
                 rfl.setCreated_time(rs.getTimestamp("created_time"));
                 rfl.setFrom(rs.getDate("from"));
                 rfl.setTo(rs.getDate("to"));
                 rfl.setReason(rs.getString("reason"));
                 rfl.setStatus(rs.getInt("status"));
-                
+
                 Employee created_by = new Employee();
                 created_by.setId(rs.getInt("created_by"));
                 created_by.setEname(rs.getString("created_name"));
                 rfl.setCreated_by(created_by);
-                
+
                 int processed_by_id = rs.getInt("processed_by");
-                if(processed_by_id!=0)
-                {
+                if (processed_by_id != 0) {
                     Employee processed_by = new Employee();
                     processed_by.setId(rs.getInt("processed_by"));
                     processed_by.setEname(rs.getString("processed_name"));
                     rfl.setProcessed_by(processed_by);
                 }
-                
+
                 rfls.add(rfl);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally
-        {
+        } finally {
             closeConnection();
         }
         return rfls;
@@ -157,7 +246,7 @@ public class ApplicationDBContext extends DBContext<Application>{
                                      Set status = ?,
                                      	processed_by = ?
                                      where rid = ?""";
-            
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, model.getStatus());
             stm.setInt(2, model.getProcessed_by().getId());
@@ -165,15 +254,11 @@ public class ApplicationDBContext extends DBContext<Application>{
             stm.executeUpdate();
         } catch (Exception ex) {
             Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally
-        {
+        } finally {
             closeConnection();
         }
-                 
-    }
-    
 
+    }
 
     @Override
     public void delete(Application model) {

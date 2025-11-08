@@ -90,5 +90,26 @@
                 </tr>
             </c:forEach>
         </table>
+        <div class="paging-container">
+
+            <%-- Nút 'Previous' --%>
+            <c:if test="${requestScope.pageindex > 1}">
+                <a href="list?page=${requestScope.pageindex - 1}">Previous</a>
+            </c:if>
+
+            <%-- Hiển thị các số trang --%>
+            <c:forEach begin="1" end="${requestScope.pagecount}" var="i">
+                <a class="${i eq requestScope.pageindex ? 'active' : ''}" 
+                   href="list?page=${i}">
+                    ${i}
+                </a>
+            </c:forEach>
+
+            <%-- Nút 'Next' --%>
+            <c:if test="${requestScope.pageindex < requestScope.pagecount}">
+                <a href="list?page=${requestScope.pageindex + 1}">Next</a>
+            </c:if>
+
+        </div>
     </body>
 </html>

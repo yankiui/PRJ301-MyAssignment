@@ -14,12 +14,30 @@ import model.auth.User;
 @WebServlet(urlPatterns = "/request/list")
 public class ListController extends BaseRequiredAuthorizationController {
 
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        ApplicationDBContext db = new ApplicationDBContext();
-        ArrayList<Application> rfls = db.getByEmployeeAndSubodiaries(user.getId());
-        req.setAttribute("rfls", rfls);
-        req.getRequestDispatcher("../view/application/list.jsp").forward(req, resp);
-    }
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp, User user) 
+        throws ServletException, IOException {
+    
+    int pagesize = 10;
+    String page = req.getParameter("page");
+    page = (page == null) ? "1" : page;
+    int pageindex = Integer.parseInt(page);
+    
+    ApplicationDBContext db = new ApplicationDBContext();
+    
+    ArrayList<Application> applications = db.list(pageindex, pagesize);
+    
+    db = new ApplicationDBContext(); 
+    int count = db.count(); 
+    int pagecount = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize + 1);
+    
+    req.setAttribute("pagecount", pagecount);
+    req.setAttribute("pageindex", pageindex);
+    
+    req.setAttribute("rfls", applications); 
+    
+    
+    req.getRequestDispatcher("../view/application/list.jsp").forward(req, resp);
+}
 
     @Override
     protected void processPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
@@ -30,5 +48,6 @@ public class ListController extends BaseRequiredAuthorizationController {
     protected void processGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         processRequest(req, resp, user);
     }
+    
 
 }

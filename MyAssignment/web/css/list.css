@@ -195,3 +195,34 @@ a[href*="status=2"]:hover {
     text-decoration: underline;
     color: #f48fb1; /* Sáng hơn */
 }
+
+.paging-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa các nút */
+    margin: 20px auto;
+    max-width: 900px;
+}
+
+.paging-container a {
+    text-decoration: none;
+    color: #58a6ff;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Định dạng cho trang hiện tại (active) */
+.paging-container a.active {
+    background-color: #58a6ff;
+    color: #121212;
+    border-color: #58a6ff;
+}
+
+.paging-container a:hover:not(.active) {
+    background-color: #3a3a3a;
+}
