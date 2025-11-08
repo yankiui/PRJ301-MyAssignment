@@ -23,14 +23,6 @@ public class CreateController extends BaseRequiredAuthenticationController {
         Application a = new Application();
         HttpSession session = req.getSession(false);
         if (session != null && session.getAttribute("auth") != null) {
-            
-            // Bước 2: Lấy attribute có tên là "auth" từ session.
-            // session.getAttribute() luôn trả về một đối tượng kiểu Object.
-//            Object authObject = session.getAttribute("auth");
-//            
-//            // Bước 3: Ép kiểu đối tượng đó về đúng kiểu User ban đầu.
-//            User loggedInUser = (User) authObject;
-
             a.setCreated_by(user.getEmployee());
             a.setCreated_time(new Date());
             a.setFrom(java.sql.Date.valueOf(req.getParameter("datStart")));
@@ -40,16 +32,6 @@ public class CreateController extends BaseRequiredAuthenticationController {
             ad.insert(a);
             req.setAttribute("application", a);
             req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
-            
-//            a.setUser(loggedInUser.getDisplayname());
-//            a.setRole(loggedInUser.getRole());
-//            a.setDept(loggedInUser.getDept());
-//            a.setStart_date(Date.valueOf(req.getParameter("datStart")));
-//            a.setEnd_date(Date.valueOf(req.getParameter("datEnd")));
-//            a.setReason(req.getParameter("reason"));
-//            ApplicationDBContext ad = new ApplicationDBContext();
-//            ad.insert(a);
-            
             req.setAttribute("application", a);
             req.getRequestDispatcher("../view/application/detail.jsp").forward(req, resp);
             

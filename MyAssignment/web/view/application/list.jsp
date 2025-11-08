@@ -10,22 +10,21 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Application</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/list.css">
     </head>
     <body>
-
+        <jsp:include page="../common/greeting.jsp"></jsp:include>
         <table border="1px">
             <tr>
-                <td>request id</td>
-                <td>created by</td>
-                <td>reason</td>
-                <td>from</td>
-                <td>to</td>
-                <td>status</td>
-
-                <%-- 2. Chỉ hiển thị tiêu đề "processed by" nếu là Manager/Leader --%>
-                <c:if test="${sessionScope.auth.roles[0].id < 3}">
-                    <td>processed by</td>
-                </c:if>
+                <th>request id</th>
+                <th>created by</th>
+                <th>reason</th>
+                <th>from</th>
+                <th>to</th>
+                <th>status</th>
+                    <c:if test="${sessionScope.auth.roles[0].id < 3}">
+                    <th>processed by</th>
+                    </c:if>
             </tr>
 
             <c:forEach items="${requestScope.rfls}" var="r">

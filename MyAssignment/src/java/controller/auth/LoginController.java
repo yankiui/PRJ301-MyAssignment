@@ -17,26 +17,26 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        
+
         UserDBContext db = new UserDBContext();
         User u = db.get(username, password);
-        
-        if(u != null)
-        {
+
+        if (u != null) {
             HttpSession session = req.getSession();
             session.setAttribute("auth", u);
-            req.getRequestDispatcher("view/common/home.jsp").forward(req, resp);
+            resp.sendRedirect("request/list");
+        } else {
+            req.setAttribute("errorMessage", "Sai tên đăng nhập hoặc mật khẩu!");
+
+            // Forward (Chuyển tiếp) về trang login.jsp
+            req.getRequestDispatcher("view/auth/login.jsp").forward(req, resp);
         }
-        else
-        {
-            req.getRequestDispatcher("view/auth/login.html").forward(req, resp);
-        }
-        
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("view/auth/login.html").forward(req, resp);
+        req.getRequestDispatcher("view/auth/login.jsp").forward(req, resp);
     }
-    
+
 }

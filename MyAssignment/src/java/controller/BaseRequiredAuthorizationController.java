@@ -13,13 +13,8 @@ public abstract class BaseRequiredAuthorizationController extends BaseRequiredAu
 
     private boolean isAuthorized(HttpServletRequest req, User user) {
 
-        // KHÔNG KIỂM TRA .isEmpty() NỮA.
-        // HÃY LUÔN LUÔN TẢI LẠI QUYỀN (ROLE + FEATURE)
-        // ĐỂ ĐẢM BẢO DỮ LIỆU LUÔN MỚI NHẤT
         RoleDBContext db = new RoleDBContext();
         user.setRoles(db.getByUserId(user.getId()));
-        // Ghi chú: Bạn không cần update session ở đây,
-        // chỉ cần đối tượng 'user' trong bộ nhớ có đủ quyền
          req.getSession().setAttribute("auth", user);
 
         String url = req.getServletPath();

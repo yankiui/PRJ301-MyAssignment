@@ -15,37 +15,47 @@ public class UserDBContext extends DBContext<User> {
     public User get(String username, String password) {
         try {
             String sql = """
-                                     SELECT
-                                     u.uid,
-                                     u.username,
-                                     u.displayname,
-                                     e.eid,
-                                     e.ename
-                                     FROM [User] u INNER JOIN [Enrollment] en ON u.[uid] = en.[uid]
-                                     \t\t\t\t\tINNER JOIN [Employee] e ON e.eid = en.eid
-                                     \t\t\t\t\tWHERE
-                                     \t\t\t\t\tu.username = ? AND u.[password] = ?
-                                     \t\t\t\t\tAND en.active = 1""";
+             SELECT
+                 u.uid,
+                 u.username,
+                 u.displayname,
+                 e.eid,
+                 e.ename,
+                 d.did,       -- THÊM DÒNG NÀY
+                 d.dname      -- THÊM DÒNG NÀY
+             FROM [User] u 
+             INNER JOIN [Enrollment] en ON u.[uid] = en.[uid]
+             INNER JOIN [Employee] e ON e.eid = en.eid
+             INNER JOIN [Division] d ON e.did = d.did -- THÊM DÒNG NÀY
+             WHERE
+                 u.username = ? AND u.[password] = ?
+                 AND en.active = 1""";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, username);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 User u = new User();
+
+                model.Department d = new model.Department();
+                d.setId(rs.getInt("did"));
+                d.setDname(rs.getString("dname"));
+
                 Employee e = new Employee();
                 e.setId(rs.getInt("eid"));
                 e.setEname(rs.getString("ename"));
+
+                e.setDept(d);
+
                 u.setEmployee(e);
 
                 u.setUsername(username);
                 u.setId(rs.getInt("uid"));
                 u.setDisplayname(rs.getString("displayname"));
 
-//                RoleDBContext roleDB = new RoleDBContext();
-//                ArrayList<Role> roles = roleDB.getByUserId(u.getId());
-//                u.setRoles(roles);
-                ArrayList<Role> roles = getRolesByUserID(u.getId()); // Gọi hàm nội bộ
+                ArrayList<Role> roles = getRolesByUserID(u.getId());
                 u.setRoles(roles);
+
                 return u;
             }
         } catch (SQLException ex) {
