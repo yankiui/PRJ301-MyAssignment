@@ -12,39 +12,40 @@ import model.Employee;
 
 public class ApplicationDBContext extends DBContext<Application> {
 
-    public ArrayList<Application> list(int pageindex, int pagesize) {
-
+    public ArrayList<Application> list(int pageindex, int pagesize, int loggedInEmployeeId) {
         ArrayList<Application> apps = new ArrayList<>();
-
         try {
             String sql = """
                      SELECT 
                          r.rid, r.created_time, r.[from], r.[to], r.reason, r.status,
-                         
                          c.eid AS created_id, 
                          c.ename AS created_name,
-                         
                          p.eid AS processed_id, 
                          p.ename AS processed_name
                          
                      FROM RequestForLeave r
+                     
                      INNER JOIN Employee c ON r.created_by = c.eid
+                     INNER JOIN Employee m ON m.eid = ? -- 'm' là người xem
                      LEFT JOIN Employee p ON r.processed_by = p.eid
                      
-                     ORDER BY r.rid ASC
+                     WHERE c.did = m.did 
+                     
+                     ORDER BY r.rid ASC 
                      OFFSET (? - 1) * ? ROWS
                      FETCH NEXT ? ROWS ONLY;
                      """;
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, pageindex);
-            stm.setInt(2, pagesize);
-            stm.setInt(3, pagesize);
+            stm.setInt(1, loggedInEmployeeId); // tham số cho WHERE
+            stm.setInt(2, pageindex);          // tham số cho OFFSET
+            stm.setInt(3, pagesize);           // tham số cho OFFSET
+            stm.setInt(4, pagesize);           // tham số cho FETCH
+
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
                 Application app = new Application();
-
                 app.setId(rs.getInt("rid"));
                 app.setCreated_time(rs.getTimestamp("created_time"));
                 app.setFrom(rs.getDate("from"));
@@ -58,50 +59,44 @@ public class ApplicationDBContext extends DBContext<Application> {
                 app.setCreated_by(createdBy);
 
                 int processedById = rs.getInt("processed_id");
-                if (!rs.wasNull()) { // Nếu processed_by không NULL
+                if (!rs.wasNull()) {
                     Employee processedBy = new Employee();
                     processedBy.setId(processedById);
                     processedBy.setEname(rs.getString("processed_name"));
                     app.setProcessed_by(processedBy);
                 }
-
                 apps.add(app);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    closeConnection();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            closeConnection(); // Đảm bảo đã sửa logic đóng connection
         }
-
         return apps;
     }
 
-    public int count() {
+    public int count(int loggedInEmployeeId) {
         try {
-            String sql = "SELECT COUNT(*) as total FROM RequestForLeave";
+            // SỬA LẠI SQL: Thêm JOIN và WHERE
+            String sql = """
+                     SELECT COUNT(*) as total 
+                     FROM RequestForLeave r
+                     INNER JOIN Employee c ON r.created_by = c.eid
+                     INNER JOIN Employee m ON m.eid = ?
+                     WHERE c.did = m.did
+                     """;
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
+            stm.setInt(1, loggedInEmployeeId); // tham số cho WHERE
 
+            ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 return rs.getInt("total");
             }
         } catch (SQLException ex) {
             Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    closeConnection();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ApplicationDBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            closeConnection(); // Đảm bảo đã sửa logic đóng connection
         }
         return 0;
     }
@@ -130,9 +125,12 @@ public class ApplicationDBContext extends DBContext<Application> {
                                            ,[processed_by]
                                      \t  ,p.ename as [processed_name]
                                      FROM Org e INNER JOIN [RequestForLeave] r ON e.eid = r.created_by
-                                     \t\t\tLEFT JOIN Employee p ON p.eid = r.processed_by""";
+                                     \t\t\tLEFT JOIN Employee p ON p.eid = r.processed_by
+                         WHERE e.did = (SELECT did FROM Employee WHERE eid = ?)""";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, eid);
+            stm.setInt(1, eid); // tham số 1 cho CTE
+            stm.setInt(2, eid); // tham số 2 cho WHERE
+
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Application rfl = new Application();

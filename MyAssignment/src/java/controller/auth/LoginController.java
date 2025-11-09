@@ -28,8 +28,7 @@ public class LoginController extends HttpServlet {
         } else {
             req.setAttribute("errorMessage", "Sai tên đăng nhập hoặc mật khẩu!");
 
-            // Forward (Chuyển tiếp) về trang login.jsp
-            req.getRequestDispatcher("view/common/home.jsp").forward(req, resp);
+            req.getRequestDispatcher("view/auth/login.jsp").forward(req, resp);
         }
 
     }
